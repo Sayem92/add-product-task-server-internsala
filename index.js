@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.lhckmem.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -23,11 +22,15 @@ async function run() {
 
 
         app.post('/addProduct', async (req, res) => {
-            const task = req.body;
-            console.log(task);
-            const result = await ProductsCollection.insertOne(task);
-            console.log(result);
+            const product = req.body;
+            const result = await ProductsCollection.insertOne(product);
             res.send(result);
+        });
+
+        app.get('/product', async (req, res) => {
+            const query = { };
+            const allProducts = await ProductsCollection.find(query).toArray();
+            res.send(allProducts);
         });
 
         
